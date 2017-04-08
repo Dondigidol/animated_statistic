@@ -180,7 +180,7 @@ class parseINI
 	
 	function getparam($param)
 	{
-		isset($this->params_array[$param] ? $param_value = $this->params_array[$param] : die "Ошибка при попытке получить значение параметра");
+		isset($this->params_array[$param]) ? $param_value = $this->params_array[$param] : die("Ошибка при попытке получить значение параметра");
 		return $param_value;
 	}
 }
