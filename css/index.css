@@ -3,13 +3,13 @@ margin:0;
 padding:0;
 }
 
-#maintable{
+.maintable{
 	margin: 0 auto;
 	border-collapse:collapse;
 }
 
-#maintable td{
-	border: 1px solid black;
+.maintable td{
+	border: 0px solid black;
 	width: 200px;
 	height: 350px;	
 }
