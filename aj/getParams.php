@@ -8,8 +8,7 @@ $arr = array();
 
 for($i=1; $i<=15; $i++)
 {
-	$val = "";
-	$val = $params->getparam("plan" + $i);
+	$val = $params->getparam("plan" . $i);
 	array_push($arr, $val);
 }	
 
