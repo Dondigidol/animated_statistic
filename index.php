@@ -137,6 +137,7 @@
 		});
 		
 		var stages;
+		var plan = [];
 		
 		function getParams()
 		{
@@ -145,7 +146,12 @@
 				url: 'aj/getParams.php',
 				success: function(data)
 				{
-					$("#stage1").html(data);
+					var obj = $.parseJSON(data);
+					for(var x=0; x<=obj.length-1; x++)
+					{
+						plan[x] = obj[x];
+					}
+					
 				}
 			})
 		}
@@ -165,9 +171,11 @@
 					{
 						otdel = obj[x]['otdel'];
 						sumTO = Math.round(parseFloat(obj[x]['summa']));
+						
 						// $("#stage" + otdel).html(otdel + " | "+ sumTO);
 						curstage = Math.floor(sumTO / stage);
 						$("#stage" + otdel).html(otdel);
+						$("#stage" + otdel).html(stage);
 						$("#stage" + otdel).css({"background-image":"url(img/stage" + curstage + ".png)", "width":"100%", "height":"100%", "background-size":"cover"});
 					}
 					
