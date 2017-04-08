@@ -161,6 +161,32 @@ class mysql_connection
 	
 }
 
+class parseINI
+{
+	var $params_array;
+	
+	function getconfig($ini_path)
+	{
+		try
+		{
+			$this->params_array = parse_ini_file($ini_path);
+		}
+		catch (Exception $e)
+		{
+			echo "Ошибка при подключении к конфигурационному файлу:" . $e->getmessage() . '\n';
+		}
+			
+	}
+	
+	function getparam($param)
+	{
+		isset($this->params_array[$param] ? $param_value = $this->params_array[$param] : die "Ошибка при попытке получить значение параметра");
+		return $param_value;
+	}
+}
+
+
+
 function connect_to_ldap($user, $userPW, $ini_file)
 {
 	$ldap = new ldap_connection;
