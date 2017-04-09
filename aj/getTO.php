@@ -15,7 +15,21 @@ $query_str = ("SELECT prod_g.group_code as otdel, sum(T1.summa) as summa
 				order by prod_g.group_code");
 
 $result = $mssql->sql_query($query_str);
-echo json_encode($result);
-// return json_encode();
+
+$res_arr = array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+
+for ($x=0; $x<15; $x++)
+{
+
+	foreach ($result as $arr=>$row)
+	{
+		if ($row['otdel'] == $x + 1)
+		{
+			$res_arr[$x] = round($row['summa'], 1);
+		}
+	}
+}
+	
+echo json_encode($res_arr);
 
 ?>
