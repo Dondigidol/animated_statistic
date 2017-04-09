@@ -64,7 +64,7 @@ class mssql_connection
 	{
 		try
 		{
-			$this->conn = odbc_connect('Driver={SQL Server};Server=' . $this->server . ';Database=' . $this->database . ';', $this->user, $this->userPW);
+			$this->conn = mssql_connect($this->server, $this->user, $this->userPW);
 		
 		}
 		catch (Exception $e)
@@ -81,12 +81,12 @@ class mssql_connection
 			try 
 			{					
 				ini_set('max_execution_time', 2000);
-				$arr = odbc_exec($this->conn, $query_str);
+				$arr = mssql_query($query_str);
 				$query_type = explode(' ', $query_str);
 				if (strtoupper($query_type[0]) == 'SELECT')
 				{
 					$result = array();
-					while($val = odbc_fetch_array($arr))
+					while($val = mssql_fetch_array($arr))
 					{
 						array_push($result, $val);
 					}		
@@ -164,12 +164,14 @@ class mysql_connection
 class parseINI
 {
 	var $params_array;
+	var $pathINI;
 	
 	function getconfig($ini_path)
 	{
 		try
 		{
 			$this->params_array = parse_ini_file($ini_path);
+			$this->pathINI = $ini_path;
 		}
 		catch (Exception $e)
 		{
@@ -180,9 +182,60 @@ class parseINI
 	
 	function getparam($param)
 	{
-		isset($this->params_array[$param]) ? $param_value = $this->params_array[$param] : die("Ошибка при попытке получить значение параметра");
+		isset($this->params_array[$param]) ? $param_value = $this->params_array[$param] : $param_value = '';
 		return $param_value;
 	}
+	
+	/* function setparam($param, $val)
+	{
+		$params_array[$param] = $val;
+	} */
+	
+	function setparam($assoc_arr, $has_sections=FALSE)
+	{ 
+		$content = ""; 
+		if ($has_sections) { 
+			foreach ($assoc_arr as $key=>$elem) { 
+				$content .= "[".$key."]\n"; 
+				foreach ($elem as $key2=>$elem2) { 
+					if(is_array($elem2)) 
+					{ 
+						for($i=0;$i<count($elem2);$i++) 
+						{ 
+							$content .= $key2."[] = \"".$elem2[$i]."\"\n"; 
+						} 
+					} 
+					else if($elem2=="") $content .= $key2." = \n"; 
+					else $content .= $key2." = \"".$elem2."\"\n"; 
+				} 
+			} 
+		} 
+		else { 
+			foreach ($assoc_arr as $key=>$elem) { 
+				if(is_array($elem)) 
+				{ 
+					for($i=0;$i<count($elem);$i++) 
+					{ 
+						$content .= $key."[] = \"".$elem[$i]."\"\n"; 
+					} 
+				} 
+				else if($elem=="") $content .= $key." = \n"; 
+				else $content .= $key." = \"".$elem."\"\n"; 
+			} 
+		} 
+
+		if (!$handle = fopen($this->pathINI, 'w')) { 
+			return false; 
+		}
+
+		$success = fwrite($handle, $content);
+		fclose($handle); 
+
+		return $success; 
+	}
+	
+	
+	
 }
 
 
